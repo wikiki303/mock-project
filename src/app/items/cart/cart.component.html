@@ -1,0 +1,98 @@
+<div class="row" *ngIf="_.size(itemsByCustomer)">
+  <div class="table-responsive col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th class="text-center">Price</th>
+          <th class="text-center">Total</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let customer of itemsByCustomer">
+        <tr *ngFor="let item of customer.items">
+          <td class="col-md-8">
+            <div class="media">
+              <a class="thumbnail pull-left" href="#">
+                <img
+                  class="media-object"
+                  src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png"
+                  style="width: 72px; height: 72px"
+                />
+              </a>
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a href="#">{{ item.itemName }}</a>
+                </h4>
+              </div>
+            </div>
+          </td>
+          <td class="col-md-1" style="text-align: center">
+            <input type="email" class="form-control" id="exampleInputEmail1" value="{{ item.amount }}" />
+          </td>
+          <td class="col-md-1 text-center">
+            <strong>{{ item.price | currency }}</strong>
+          </td>
+          <td class="col-md-1 text-center">
+            <strong>{{ item.amount * item.price | currency }}</strong>
+          </td>
+          <td class="col-md-1">
+            <button
+              type="button"
+              class="btn btn-danger"
+              [disabled]="hasSubmit"
+              (click)="removeItemFromCart(item.itemId, item.customerId, item.cartId)"
+            >
+              <span class="glyphicon glyphicon-remove"></span> Remove
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-center">
+            <h4>
+              <strong>{{ customer.customerName }}</strong>
+            </h4>
+          </td>
+          <td> </td>
+          <td> </td>
+          <td><h5>Subtotal</h5></td>
+          <td class="text-right">
+            <h5>
+              <strong>{{ customer.customerTotal | currency }}</strong>
+            </h5>
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td><h3>Total</h3></td>
+          <td class="text-right">
+            <h3>
+              <strong>{{ cart?.totalPrice | currency }}</strong>
+            </h3>
+          </td>
+        </tr>
+        <tr>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td>
+            <button type="button" class="btn btn-default" (click)="submitClick()">
+              <span class="glyphicon glyphicon-shopping-cart"></span>
+              {{ hasSubmit ? "UnSubmit" : "Submit" }}
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-success" [disabled]="!hasSubmit" (click)="orderClick()">
+              Order <span class="glyphicon glyphicon-play"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

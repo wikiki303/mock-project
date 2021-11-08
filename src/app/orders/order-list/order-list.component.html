@@ -1,0 +1,26 @@
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Customer Name</th>
+        <th>Customer Phone</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Order Time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders; let i = index">
+        <td>{{ order.orderId }}</td>
+        <td>{{ order.customerName }}</td>
+        <td>{{ order.customerPhoneNumber }}</td>
+        <td>{{ order.totalPrice }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.orderTime | date: "short" }}</td>
+        <td><a [routerLink]="" (click)="viewDetail(order.orderId, i)">View</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-md-5">
+    <app-item-list
+      [shop]="shop"
+      [user]="user"
+      [cartId]="cart?.cartId"
+      [hasSubmit]="hasSubmit"
+      (refreshCart)="onRefreshCart($event)"
+    ></app-item-list>
+  </div>
+  <div class="col-md-7">
+    <app-cart
+      [user]="user"
+      [cart]="cart"
+      [itemsByCustomer]="itemsByCustomer"
+      [hasSubmit]="hasSubmit"
+      (refreshCart)="onRefreshCart($event)"
+      (handleSubmit)="hasSubmit = $event"
+    ></app-cart>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="purchase overflow-auto" *ngIf="_.size(orderDetail)">
+  <header>
+    <div class="row">
+      <div class="col-sm-3 col-xs-3">
+        <div class="form-group">
+          <select
+            class="form-control"
+            id="status"
+            (change)="onChangeStatus($event.target.value)"
+            [ngModel]="orderDetail?.status"
+            [disabled]="orderDetail?.status === 'Cancelled'"
+          >
+            <option *ngFor="let status of orderStatus; let i = index" [value]="status" [disabled]="i < orderStatus.indexOf(orderDetail?.status)">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-9 col-xs-9 company-details">
+        <button type="button" class="btn btn-default" [disabled]="orderDetail?.status === 'Cancelled'" (click)="cancelOrder()">Cancel</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="row">
+      <div class="col-sm-3 col-xs-3 to-details">
+        <div class="to-name">{{ orderDetail?.customerName }}</div>
+        <div class="to-address">{{ orderDetail?.customerPhoneNumber }}</div>
+      </div>
+      <div class="col-sm-9 col-xs-9 purchase-info">
+        <h4 class="info-code">#{{ orderDetail?.orderId }}</h4>
+        <div class="info-date">{{ orderDetail?.orderTime | date: "short" }}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-xs-12 table-responsive">
+        <table class="table table-condensed" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <thead>
+            <tr>
+              <th class="text-center col-sm-1 col-xs-1">Item</th>
+              <th class="text-center col-sm-7 col-xs-7">Price</th>
+              <th class="text-center col-sm-1 col-xs-1">Qty</th>
+              <th class="text-center col-sm-3 col-xs-3">Total</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let item of orderDetail?.itemsInCart">
+            <tr>
+              <td class="col-sm-1 col-xs-1 text-center">{{ item.itemName }}</td>
+              <td class="text-center">{{ item.price | currency }}</td>
+              <td class="text-center">{{ item.amount }}</td>
+              <td class="text-right">{{ item.price * item.amount | currency }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2"></th>
+              <th class="text-center">Total</th>
+              <th class="text-right">{{ orderDetail?.totalPrice | currency }}</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
