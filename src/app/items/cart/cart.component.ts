@@ -1,17 +1,11 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Cart } from '../../models/cart.model';
 import _ from 'lodash';
 import { ItemService } from '../item.service';
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { User } from 'src/app/auth/user.model';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -25,46 +19,15 @@ export class CartComponent implements OnInit, OnChanges {
   @Input() hasSubmit: boolean;
   @Output() refreshCart = new EventEmitter<string>();
   @Output() handleSubmit = new EventEmitter<boolean>();
+  @Output() handleOrder = new EventEmitter<{ hasSubmit: boolean; cartId: string }>();
   _ = _; //lodash in html
+  defaultImage = environment.defaultImage;
 
-  constructor(
-    private itemService: ItemService,
-    private alertService: AlertService
-  ) {}
+  constructor(private itemService: ItemService, private alertService: AlertService) {}
 
   ngOnInit(): void {}
 
-  ngOnChanges() {
-    // if (this.cart && this.user) {
-    //   const userId = this.user.id;
-    //   this.itemsByCustomer = [];
-    //   this.hasSubmit =
-    //     _.size(
-    //       _.filter(this.cart.itemsInCart, function (o) {
-    //         return o.readyToOrder && o.customerId === userId;
-    //       })
-    //     ) === _.size(this.cart.itemsInCart);
-    //   this.cart.itemsInCart.forEach((item) => {
-    //     const index = _.findIndex(this.itemsByCustomer, {
-    //       customerId: item.customerId,
-    //     });
-    //     const total = item.price * item.amount;
-    //     if (index >= 0) {
-    //       this.itemsByCustomer[index].customer_total += total;
-    //       this.itemsByCustomer[index].items.push(item);
-    //     } else {
-    //       this.itemsByCustomer.push({
-    //         customerId: item.customerId,
-    //         customerName: item.customerName,
-    //         customerTotal: total,
-    //         cartId: this.cart.cartId,
-    //         items: [{ ...item }],
-    //       });
-    //     }
-    //   });
-    //   console.log('this.itemsByCustomer', this.itemsByCustomer);
-    // }
-  }
+  ngOnChanges() {}
 
   removeItemFromCart(itemId: string, customerId: string, cartId: string) {
     this.itemService.removeItemFromCart(itemId, customerId, cartId).subscribe(
@@ -85,14 +48,9 @@ export class CartComponent implements OnInit, OnChanges {
     let submitObs: Observable<any>;
 
     if (this.hasSubmit) {
-      submitObs = this.itemService.unSubmitItems(
-        this.user.id,
-        this.cart.cartId
-      );
+      submitObs = this.itemService.unSubmitItems(this.user.id, this.cart.cartId);
     } else {
-      submitObs = this.itemService.submitItems(
-        _.find(this.itemsByCustomer, { customerId: this.user.id })
-      );
+      submitObs = this.itemService.submitItems(_.find(this.itemsByCustomer, { customerId: this.user.id }));
     }
 
     submitObs.subscribe(
@@ -117,6 +75,8 @@ export class CartComponent implements OnInit, OnChanges {
           this.alertService.error(resData.errorMessage, true);
           return;
         }
+        this.hasSubmit = !this.hasSubmit;
+        this.handleOrder.emit({ hasSubmit: this.hasSubmit, cartId: this.cart.cartId });
       },
       (errorMessage) => {
         this.alertService.error(errorMessage, true);

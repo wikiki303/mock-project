@@ -6,16 +6,27 @@
       [cartId]="cart?.cartId"
       [hasSubmit]="hasSubmit"
       (refreshCart)="onRefreshCart($event)"
+      (refreshShop)="refreshShop.emit($event)"
+      (updateItem)="itemId = $event"
     ></app-item-list>
   </div>
   <div class="col-md-7">
-    <app-cart
-      [user]="user"
-      [cart]="cart"
-      [itemsByCustomer]="itemsByCustomer"
-      [hasSubmit]="hasSubmit"
-      (refreshCart)="onRefreshCart($event)"
-      (handleSubmit)="hasSubmit = $event"
-    ></app-cart>
+    <app-item-edit
+      *ngIf="user?.isVendor; else cartForm"
+      [shopId]="shop?.shopId"
+      [itemId]="itemId"
+      (refreshShop)="refreshShop.emit($event)"
+    ></app-item-edit>
+    <ng-template #cartForm>
+      <app-cart *ngIf="!!cart?.cartId"
+        [user]="user"
+        [cart]="cart"
+        [itemsByCustomer]="itemsByCustomer"
+        [hasSubmit]="hasSubmit"
+        (refreshCart)="onRefreshCart($event)"
+        (handleSubmit)="hasSubmit = $event"
+        (handleOrder)="onCartOrder($event)"
+      ></app-cart>
+    </ng-template>
   </div>
 </div>

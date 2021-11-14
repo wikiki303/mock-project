@@ -10,8 +10,8 @@ export class ShopService {
     private api: ApiService
   ) {}
 
-  getListShops(){
-
+  getAllShops(){
+    return this.api.getEndPoint<Shop[]>(`Shop/all`);
   }
 
   getShopById(id : string) {

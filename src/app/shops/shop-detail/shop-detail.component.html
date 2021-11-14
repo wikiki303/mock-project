@@ -1,28 +1,20 @@
 <div class="container-fluid well col-md-5">
   <div class="row-fluid">
     <div class="col-md-3">
-      <img
-        [src]="shop?.image"
-        style="height: 100px; width: 100px"
-        class="img-circle"
-      />
+      <img [src]="shop?.image ? 'data:image/png;base64,' + shop?.image : defaultImage" style="height: 100px; width: 100px" class="img-circle" />
     </div>
 
     <div class="col-md-7">
       <h3>{{ shop?.name }}</h3>
       <h6>{{ shop?.phoneNumber }}</h6>
-      <h6 *ngIf="!user?.isVendor">
+      <h6 *ngIf="user?.isVendor">
         <a [routerLink]="" (click)="isViewOrders = !isViewOrders">{{ isViewOrders ? "View Menu" : "View Orders" }}</a>
       </h6>
     </div>
 
     <div class="col-md-2">
       <div class="btn-group">
-        <a
-          class="btn dropdown-toggle btn-info"
-          data-toggle="dropdown"
-          [routerLink]=""
-        >
+        <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" [routerLink]="">
           Action
           <span class="icon-cog icon-white"></span><span class="caret"></span>
         </a>
@@ -40,7 +32,7 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    <app-orders *ngIf="isViewOrders; else menu" [shop]="shop"></app-orders>
-    <ng-template #menu><app-items [shop]="shop" [user]="user"></app-items></ng-template>
+    <app-orders *ngIf="isViewOrders; else menu" [id]="shop?.shopId" [isVendor]="true"></app-orders>
+    <ng-template #menu><app-items [shop]="shop" [user]="user" (refreshShop)="onRefreshShop($event)"></app-items></ng-template>
   </div>
 </div>

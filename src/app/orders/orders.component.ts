@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable } from 'rxjs';
 import { Shop } from '../models/shop.model';
 import { AlertService } from '../shared/alert/alert.service';
 import { OrderService } from './order.service';
@@ -10,7 +11,8 @@ import { OrderService } from './order.service';
   styleUrls: ['./orders.component.css'],
 })
 export class OrdersComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() shop: Shop;
+  @Input() id: string;
+  @Input() isVendor: boolean;
   orders = [];
   orderDetail = {};
   isLoading = false;
@@ -20,22 +22,30 @@ export class OrdersComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {}
 
   ngOnChanges() {
-    if (this.shop) {
-      this.orderService.getOrdersByShop(this.shop.id).subscribe(
-        (resData) => {
-          if (resData) {
-            if (!resData.isSuccess) {
-              this.alertService.error(resData.errorMessage, true);
-              return;
-            }
-            this.orders = resData.orders;
-          }
-        },
-        (errorMessage) => {
-          this.alertService.error(errorMessage, true);
-        }
-      );
+    let orderObs: Observable<any>;
+
+    if (this.id) {
+      if (this.isVendor) {
+        orderObs = this.orderService.getOrdersByShop(this.id);
+      } else {
+        orderObs = this.orderService.getOrdersByCustomer(this.id);
+      }
     }
+
+    orderObs.subscribe(
+      (resData) => {
+        if (resData) {
+          if (!resData.isSuccess) {
+            this.alertService.error(resData.errorMessage, true);
+            return;
+          }
+          this.orders = resData.orders;
+        }
+      },
+      (errorMessage) => {
+        this.alertService.error(errorMessage, true);
+      }
+    );
   }
 
   // values: {orderId, index}

@@ -156,6 +156,7 @@ export class ApiService {
    */
   protected handleError(error: any, continuation: () => Observable<any>) {
     const exception = error.error;
+    console.log('err', error);
     return throwError(exception);
   }
 

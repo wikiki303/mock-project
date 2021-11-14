@@ -7,25 +7,26 @@
             <th>Picture</th>
             <th>Name</th>
             <th>Price</th>
-            <th></th>
+            <th>
+              <button type="button" class="btn btn-info" style="margin-right: 5px" (click)="updateItem.emit('')" *ngIf="user?.isVendor">
+                Create
+              </button>
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let item of shop?.items">
+        <tbody *ngFor="let item of shop?.items">
+          <tr *ngIf="item.isActive">
             <td>
-              <img [src]="item?.image" style="height: 100px; width: 100px" />
+              <img [src]="item.image ? 'data:image/png;base64,' + item.image : defaultImage" style="height: 100px; width: 100px" />
             </td>
             <td>{{ item?.name }}</td>
-            <td>{{ item?.price }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-info"
-                [disabled]="hasSubmit"
-                (click)="onAddToCartClick(item?.itemId)"
-              >
-                Add To Cart
-              </button>
+            <td>{{ item?.price | currency }}</td>
+            <td *ngIf="user?.isVendor">
+              <button type="button" class="btn btn-info" (click)="updateItem.emit(item?.itemId)" style="margin-right: 5px">Edit</button>
+              <button type="button" class="btn btn-danger" (click)="onDeleteItemClick(item?.itemId)">Delete</button>
+            </td>
+            <td *ngIf="!user?.isVendor">
+              <button type="button" class="btn btn-info" [disabled]="hasSubmit" (click)="onAddToCartClick(item?.itemId)">Add To Cart</button>
             </td>
           </tr>
         </tbody>

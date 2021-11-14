@@ -1,10 +1,4 @@
-import {
-  Component,
-  ComponentFactoryResolver,
-  ViewChild,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -44,7 +38,6 @@ export class AuthComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     console.log('ur', this.returnUrl);
-    
   }
 
   onSwitchMode() {
@@ -66,19 +59,17 @@ export class AuthComponent implements OnInit, OnDestroy {
     if (this.isLoginMode) {
       authObs = this.authService.login(phoneNumber, isVendor);
     } else {
-      authObs = this.authService.signup(
-        phoneNumber,
-        userName,
-        this.selectedFile,
-        isVendor
-      );
+      authObs = this.authService.signup(phoneNumber, userName, this.selectedFile, isVendor);
     }
     authObs.subscribe(
       (resData) => {
         const id = isVendor === true ? resData.shopId : resData.customerId;
         if (id) {
-          // this.router.navigate(['shops', id]);
-          this.router.navigate(['shops', '985e50']);
+          if (isVendor) {
+            this.router.navigate(['shops', id]);
+          } else {
+            this.router.navigate(['shops']);
+          }
         } else {
           this.alertService.error('User is not exist', true);
         }

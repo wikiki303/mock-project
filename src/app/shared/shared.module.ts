@@ -7,7 +7,6 @@ import { PlaceholderDirective } from './placeholder/placeholder.directive';
 import { DropdownDirective } from './dropdown.directive';
 import { ApiService } from './api.service';
 import { SharedService } from './shared.service';
-import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -16,7 +15,6 @@ import { FormsModule } from '@angular/forms';
     LoadingSpinnerComponent,
     PlaceholderDirective,
     DropdownDirective,
-    HeaderComponent,
   ],
   imports: [FormsModule, CommonModule],
   exports: [
@@ -25,7 +23,6 @@ import { FormsModule } from '@angular/forms';
     LoadingSpinnerComponent,
     PlaceholderDirective,
     DropdownDirective,
-    HeaderComponent,
     CommonModule,
   ],
   entryComponents: [AlertComponent],

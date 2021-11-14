@@ -1,5 +1,5 @@
 export class Item {
-  public id: string;
+  public itemId: string;
   public name: string;
   public price: number;
   public isActive: boolean;

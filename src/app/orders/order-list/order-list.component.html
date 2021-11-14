@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" *ngIf="isVendor">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -16,10 +16,35 @@
         <td>{{ order.orderId }}</td>
         <td>{{ order.customerName }}</td>
         <td>{{ order.customerPhoneNumber }}</td>
-        <td>{{ order.totalPrice }}</td>
+        <td>{{ order.totalPrice | currency }}</td>
         <td>{{ order.status }}</td>
         <td>{{ order.orderTime | date: "short" }}</td>
         <td><a [routerLink]="" (click)="viewDetail(order.orderId, i)">View</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="table-responsive" *ngIf="!isVendor">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Shop Name</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Order Time</th>
+        <th>Delivery Time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders; let i = index">
+        <td>{{ order.orderId }}</td>
+        <td>{{ order.shopName }}</td>
+        <td>{{ order.totalPrice | currency }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.orderTime | date: "short" }}</td>
+        <td>{{ order.deliveryTime | date: "short" }}</td>
       </tr>
     </tbody>
   </table>

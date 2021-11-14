@@ -7,6 +7,7 @@ import { User } from 'src/app/auth/user.model';
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { Shop } from '../../models/shop.model';
 import { ShopService } from '../shop.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-shop-detail',
@@ -15,6 +16,7 @@ import { ShopService } from '../shop.service';
 })
 export class ShopDetailComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
+  defaultImage = environment.defaultImage;
   user: User;
   shop: Shop;
   isViewOrders: boolean = false;
@@ -31,10 +33,16 @@ export class ShopDetailComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user.subscribe((user) => {
       this.user = user;
     });
-
-    this.spinner.show();
-
     const id = this.route.snapshot.paramMap.get('id');
+    this.getShop(id);
+  }
+
+  onRefreshShop(shopId) {
+    this.getShop(shopId);
+  }
+
+  getShop(id) {
+    this.spinner.show();
     this.shopService.getShopById(id).subscribe(
       (resData) => {
         if (resData.errorMessage) {
@@ -42,19 +50,9 @@ export class ShopDetailComponent implements OnInit, OnDestroy {
           this.spinner.hide();
           return;
         }
-        if (resData.image) {
-          resData.image = `data:image/png;base64,${resData.image}`;
-        }
-        if (resData.items?.length > 0) {
-          resData.items?.forEach((item) => {
-            if (item.image) {
-              item.image = `data:image/png;base64,${item.image}`;
-            }
-          });
-        }
 
         this.shop = resData;
-        this.shop.id = id;
+        this.shop.shopId = id;
         this.spinner.hide();
       },
       (errorMessage) => {

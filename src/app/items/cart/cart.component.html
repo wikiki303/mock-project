@@ -17,7 +17,7 @@
               <a class="thumbnail pull-left" href="#">
                 <img
                   class="media-object"
-                  src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png"
+                  [src]="item.image ? 'data:image/png;base64,' + item.image : defaultImage"
                   style="width: 72px; height: 72px"
                 />
               </a>

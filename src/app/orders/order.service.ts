@@ -14,6 +14,11 @@ export class OrderService {
     return this.api.getEndPoint<any>(`Order/${shopId}/shop/all`);
   }
 
+  getOrdersByCustomer(customerId: string) {
+    return this.api.getEndPoint<any>(`Order/${customerId}/customer/all`);
+  }
+
+
   changeOrderStatus(orderId: string, orderStatus: string, customerId: string, shopId: string) {
     const param = { orderId, orderStatus, customerId, shopId };
     return this.api.putEndPoint<any>(param, `Order/status`);

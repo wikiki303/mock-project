@@ -21,6 +21,7 @@ export const environment = {
   API_URL: 'http://localhost:8080/api/',
   CONTENT: 'application/json',
   VERSION: '1.0.0.0',
+  defaultImage: 'assets/image/images.png'
 };
 /*
  * For easier debugging in development mode, you can import the following file

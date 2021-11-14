@@ -1,7 +1,7 @@
 import { Item } from "./item.model";
 
 export class Shop {
-  public id: string;
+  public shopId: string;
   public name: string;
   public phoneNumber: string;
   public image: string;

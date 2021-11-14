@@ -1,1 +1,24 @@
-<p>shop-list works!</p>
+<div class="table-responsive col-md-6 col-md-offset-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Logo</th>
+        <th>Shop Name</th>
+        <th>Phone</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let shop of shops">
+        <td>{{ shop.shopId }}</td>
+        <td><img [src]="shop.image ? 'data:image/png;base64,' + shop.image : defaultImage" style="width: 30%" /></td>
+        <td>{{ shop.name }}</td>
+        <td>{{ shop.phoneNumber }}</td>
+        <td>
+          <button type="button" class="btn btn-info" [routerLink]="[shop.shopId]">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

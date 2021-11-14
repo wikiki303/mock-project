@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class OrderListComponent implements OnInit {
   @Input() orders: [];
+  @Input() isVendor: boolean;
   @Output() viewOrderDetail = new EventEmitter<{orderId: string, index: number}>();
 
   constructor() {}
