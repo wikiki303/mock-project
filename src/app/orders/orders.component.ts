@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Shop } from '../models/shop.model';
 import { AlertService } from '../shared/alert/alert.service';
+import { SignalRService } from '../shared/signal-r.service';
 import { OrderService } from './order.service';
 
 @Component({
@@ -13,15 +14,50 @@ import { OrderService } from './order.service';
 export class OrdersComponent implements OnInit, OnChanges, OnDestroy {
   @Input() id: string;
   @Input() isVendor: boolean;
+  newOrder: Subscription;
   orders = [];
   orderDetail = {};
   isLoading = false;
 
-  constructor(private orderService: OrderService, private alertService: AlertService, private spinner: NgxSpinnerService) {}
+  constructor(
+    private orderService: OrderService,
+    private alertService: AlertService,
+    private spinner: NgxSpinnerService,
+    public signalRService: SignalRService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.signalRService.startConnection(`shop?shop=${this.id}`);
+    this.signalRService.newOrderListener();
+
+    this.newOrder = this.signalRService.newOrder.subscribe((order) => {
+      this.refreshListOrders();
+    });
+  }
 
   ngOnChanges() {
+    this.refreshListOrders();
+  }
+
+  // values: {orderId, index}
+  viewOrderDetailClick(values: any) {
+    // this.spinner.show();
+    this.orderService.getOrderById(values.orderId).subscribe(
+      (resData) => {
+        resData.orderId = values.orderId;
+        resData.customerName = this.orders[values.index].customerName;
+        resData.customerPhoneNumber = this.orders[values.index].customerPhoneNumber;
+        this.orderDetail = resData;
+        // this.spinner.hide();
+      },
+      (errorMessage) => {
+        this.alertService.error(errorMessage, true);
+        // this.spinner.hide();
+      }
+    );
+  }
+
+  refreshListOrders() {
     let orderObs: Observable<any>;
 
     if (this.id) {
@@ -48,25 +84,8 @@ export class OrdersComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  // values: {orderId, index}
-  viewOrderDetailClick(values: any) {
-    // this.spinner.show();
-    this.orderService.getOrderById(values.orderId).subscribe(
-      (resData) => {
-        resData.orderId = values.orderId;
-        resData.customerName = this.orders[values.index].customerName;
-        resData.customerPhoneNumber = this.orders[values.index].customerPhoneNumber;
-        this.orderDetail = resData;
-        // this.spinner.hide();
-      },
-      (errorMessage) => {
-        this.alertService.error(errorMessage, true);
-        // this.spinner.hide();
-      }
-    );
-  }
-
   ngOnDestroy() {
+    this.newOrder.unsubscribe();
     this.spinner.hide();
   }
 }

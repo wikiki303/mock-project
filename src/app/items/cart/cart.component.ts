@@ -6,6 +6,7 @@ import { AlertService } from 'src/app/shared/alert/alert.service';
 import { User } from 'src/app/auth/user.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { SignalRService } from 'src/app/shared/signal-r.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +24,7 @@ export class CartComponent implements OnInit, OnChanges {
   _ = _; //lodash in html
   defaultImage = environment.defaultImage;
 
-  constructor(private itemService: ItemService, private alertService: AlertService) {}
+  constructor(private itemService: ItemService, private alertService: AlertService, public signalRService: SignalRService) {}
 
   ngOnInit(): void {}
 

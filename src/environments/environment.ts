@@ -18,7 +18,8 @@ export const environment = {
   JOB_DATA: 'job_data',
   USER_INFO: 'user_info',
   TIMESTAMP_APP: 'timestamp',
-  API_URL: 'http://localhost:8080/api/',
+  // API_URL: 'http://localhost:8080/api/',
+  API_URL: 'https://localhost:44342/api/',
   CONTENT: 'application/json',
   VERSION: '1.0.0.0',
   defaultImage: 'assets/image/images.png'
